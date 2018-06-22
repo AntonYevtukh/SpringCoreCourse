@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="client" class="ua.epam.spring.core.beans.Client">
+        <constructor-arg name="id" value="1"/>
+        <constructor-arg name="fullName" value="Ivan Ivanov"/>
+    </bean>
+
+    <bean id="consoleEventLogger" class="ua.epam.spring.core.loggers.ConsoleEventLogger"/>
+    <bean id="fileEventLogger" class="ua.epam.spring.core.loggers.FileEventLogger" init-method="init">
+        <constructor-arg name="fileName" value="D:\Yevtukh_Anton\Projects\Java\SpringCore\log.log"/>
+    </bean>
+    <bean id="cachedFileEventLogger" class="ua.epam.spring.core.loggers.CachedFileEventLogger"
+          init-method="init" destroy-method="destroy">
+        <constructor-arg name="fileName" value="D:\Yevtukh_Anton\Projects\Java\SpringCore\log.log"/>
+        <constructor-arg name="cacheSize" value="10"/>
+    </bean>
+
+    <bean id="app" class="ua.epam.spring.core.App">
+        <constructor-arg name="client" ref="client"/>
+        <constructor-arg name="eventLogger" ref="cachedFileEventLogger"/>
+    </bean>
+
+    <bean id="event" class="ua.epam.spring.core.beans.Event" scope="prototype">
+        <constructor-arg>
+            <bean class="java.util.Date"></bean>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.text.DateFormat" factory-method="getDateTimeInstance">
+                <constructor-arg name="dateStyle" value="2"></constructor-arg>
+                <constructor-arg name="timeStyle" value="2"></constructor-arg>
+                <constructor-arg name="aLocale">
+                    <bean class="java.util.Locale">
+                        <constructor-arg name="language" value="ru"/>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+</beans>
